@@ -1,17 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"github.com/r3rivera/boogeyman/b_qrcode"
 )
 
+func main() {
 
-func main(){
+	p := b_qrcode.Person{
+		FirstName: "Rommel Ryan",
+		LastName:  "Rivera",
+		Street:    "1420 W MCDERMOTT DR., #417",
+		City:      "Allen",
+		Zip:       "75013",
+		State:     "TEXAS",
+		Country:   "USA",
+		Phone:     "+1 (650) 773-1121",
+	}
 
-	banner("Hello", 25)
+	b_qrcode.GenerateQRCode(p)
 
-}
-
-func banner(text string, width int){
-	padding:= (width - len(text))/2
-	fmt.Println(padding)
 }
