@@ -1,8 +1,6 @@
-package b_qrcode
+package bqrcode
 
 import (
-	"fmt"
-
 	"github.com/skip2/go-qrcode"
 )
 
@@ -23,15 +21,6 @@ type ContactInfo struct {
 
 type Stringified interface {
 	Stringify() string
-}
-
-func (c *ContactInfo) Stringify() string {
-	return fmt.Sprintf("mailto:%s", c.Email)
-}
-
-func (p *Person) Stringify() string {
-	return fmt.Sprintf("\n\n%s %s\n\n%s\n%s %s, %s %s\n\n %s", p.FirstName, p.LastName, p.Street,
-		p.City, p.Zip, p.State, p.Country, p.Phone)
 }
 
 func GenerateQRCode(item Stringified) error {
