@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/r3rivera/boogeyman/b_qrcode"
 )
 
@@ -16,7 +18,13 @@ func main() {
 		Country:   "USA",
 		Phone:     "+1 (650) 773-1121",
 	}
+	fmt.Println(p.Stringify())
 
-	b_qrcode.GenerateQRCode(p)
+	c := b_qrcode.ContactInfo{
+		Email: "rr.rivs@gmail.com",
+	}
+
+	fmt.Println(c.Stringify())
+	b_qrcode.GenerateQRCode(&c)
 
 }

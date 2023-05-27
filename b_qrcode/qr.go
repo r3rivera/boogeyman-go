@@ -2,7 +2,6 @@ package b_qrcode
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/skip2/go-qrcode"
 )
@@ -18,12 +17,26 @@ type Person struct {
 	Phone     string
 }
 
-func GenerateQRCode(item Person) error {
+type ContactInfo struct {
+	Email string
+}
 
-	data := fmt.Sprintf("\n\n%s %s\n\n%s\n%s %s, %s %s\n\n %s", item.FirstName, item.LastName, item.Street,
-		item.City, item.Zip, item.State, item.Country, item.Phone)
-	log.Println(data)
+type Stringified interface {
+	Stringify() string
+}
 
+func (c *ContactInfo) Stringify() string {
+	return fmt.Sprintf("mailto:%s", c.Email)
+}
+
+func (p *Person) Stringify() string {
+	return fmt.Sprintf("\n\n%s %s\n\n%s\n%s %s, %s %s\n\n %s", p.FirstName, p.LastName, p.Street,
+		p.City, p.Zip, p.State, p.Country, p.Phone)
+}
+
+func GenerateQRCode(item Stringified) error {
+
+	data := item.Stringify()
 	qrCode, err := qrcode.New(data, qrcode.High)
 	if err != nil {
 		return err
