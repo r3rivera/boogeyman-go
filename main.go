@@ -15,7 +15,6 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	publicApi := r.Group("/api")
-	//privateApi := r.Group("/")
 
 	// Health test
 	publicApi.GET("/health", func(c *gin.Context) {

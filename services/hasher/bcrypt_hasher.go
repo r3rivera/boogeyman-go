@@ -1,4 +1,4 @@
-package services
+package hasher
 
 import "golang.org/x/crypto/bcrypt"
 
@@ -6,12 +6,7 @@ type BCryptPassword struct {
 	value string
 }
 
-type Encryptor interface {
-	HashPassword() (string, error)
-	VerifyPassword(hash string) bool
-}
-
-func (b *BCryptPassword) HashPassword() (string, error) {
+func (b *BCryptPassword) HashItem() (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(b.value), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err
@@ -19,7 +14,7 @@ func (b *BCryptPassword) HashPassword() (string, error) {
 	return string(hash), nil
 }
 
-func (b *BCryptPassword) VerifyPassword(hash string) bool {
+func (b *BCryptPassword) VerifyItem(hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(b.value))
 	return err == nil
 }

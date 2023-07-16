@@ -4,14 +4,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/r3rivera/boogeyman/domain"
 	"github.com/r3rivera/boogeyman/services"
 )
 
 type UserReg struct {
-	FirstName string `json:"firstname" binding:"required"`
-	LastName  string `json:"lastname" binding:"required"`
-	Email     string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
 func RegisterUserCtrl(c *gin.Context) {
@@ -21,13 +19,7 @@ func RegisterUserCtrl(c *gin.Context) {
 		return
 	}
 
-	user := domain.UserRegistration{
-		FirstName: registration.FirstName,
-		LastName:  registration.LastName,
-		Email:     registration.Email,
-	}
-
-	err := services.RegisterUser(&user)
+	err := services.CreateUserCredential(registration.Email, registration.Password)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"error": err.Error()})
 		return
