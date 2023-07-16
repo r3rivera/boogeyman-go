@@ -1,7 +1,7 @@
 #!bin/bash
 
 echo "#### Generating a Private Key ####"
-openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+openssl genrsa -out private_key.pem
 
 echo "#### Generating a Certificate Signing Request (CSR) ####"
 openssl req -new -key private_key.pem -out csr.pem
