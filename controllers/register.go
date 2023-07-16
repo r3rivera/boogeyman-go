@@ -12,7 +12,7 @@ type UserReg struct {
 	Email    string `json:"email" binding:"required"`
 }
 
-func RegisterUserCtrl(c *gin.Context) {
+func RegisterUserHandler(c *gin.Context) {
 	var registration UserReg
 	if err := c.ShouldBindJSON(&registration); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request"})

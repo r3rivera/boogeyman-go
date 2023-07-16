@@ -15,14 +15,16 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 
 	publicApi := r.Group("/api")
-
 	// Health test
 	publicApi.GET("/health", func(c *gin.Context) {
 		c.String(http.StatusOK, "Running")
 	})
 
 	// Register User
-	publicApi.POST("/register", controllers.RegisterUserCtrl)
+	publicApi.POST("/register", controllers.RegisterUserHandler)
+
+	publicWeb := r.Group("/web")
+	publicWeb.POST("/login", controllers.LoginUserHandler)
 
 	return r
 }

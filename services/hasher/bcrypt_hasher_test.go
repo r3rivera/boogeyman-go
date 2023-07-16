@@ -2,37 +2,16 @@ package hasher
 
 import "testing"
 
-func Test_BCrypt(t *testing.T) {
-
-	pass := BCryptPassword{"MyTestPasswOrd$"}
-	hash, err := pass.HashItem()
-	if err != nil {
-		t.Log("Error found with hashing the password")
-		t.Fail()
-	}
-	t.Logf("HashPassword is %s", hash)
-	same := pass.VerifyItem(hash)
-	t.Logf("Is Same? %v", same)
-	if same {
-		t.Log("Expected to not fail")
-	} else {
-		t.Fail()
-	}
-}
-
 func Test_NegativeBCrypt(t *testing.T) {
 
 	pass := BCryptPassword{"MyTestPasswOrd$"}
-	hash, err := pass.HashItem()
+	hash1, err := pass.HashItem()
 	if err != nil {
 		t.Log("Error found with hashing the password")
 		t.Fail()
 	}
-	t.Logf("HashPassword is %s", hash)
-
-	pass = BCryptPassword{"MyTestPasswOrd"}
-	same := pass.VerifyItem(hash)
-	t.Logf("Is Same? %v", same)
+	t.Logf("HashPassword is %s", hash1)
+	same := BCryptVerifyItem(hash1, "MyTestPasswOrd!")
 	if !same {
 		t.Log("Expected to fail")
 	} else {
@@ -42,17 +21,14 @@ func Test_NegativeBCrypt(t *testing.T) {
 
 func Test_PositiveBCrypt(t *testing.T) {
 
-	pass := BCryptPassword{"MyTestPasswOrd$"}
-	hash, err := pass.HashItem()
+	pass1 := NewBCrypt("MyTestPasswOrd$")
+	hash1, err := pass1.HashItem()
+	t.Logf("Hash1 Password is %s", hash1)
 	if err != nil {
 		t.Log("Error found with hashing the password")
 		t.Fail()
 	}
-	t.Logf("HashPassword is %s", hash)
-
-	pass = BCryptPassword{"MyTestPasswOrd$"}
-	same := pass.VerifyItem(hash)
-	t.Logf("Is Same? %v", same)
+	same := BCryptVerifyItem(hash1, "MyTestPasswOrd$")
 	if same {
 		t.Log("Expected to not fail")
 	} else {

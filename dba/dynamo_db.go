@@ -2,8 +2,10 @@ package dba
 
 import (
 	"context"
+	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
@@ -35,4 +37,31 @@ func (c *DDBUserCredential) WriteDB() error {
 		return err
 	}
 	return nil
+}
+
+func (c *DDBUserCredential) ReadDB() (string, error) {
+	ddbClient := getDynamodbClient()
+
+	result, err := ddbClient.GetItem(context.TODO(), &dynamodb.GetItemInput{
+		TableName: aws.String(USER_CREDENTIAL_TBL),
+		Key: map[string]types.AttributeValue{
+			"email": &types.AttributeValueMemberS{Value: c.email},
+		},
+	})
+	log.Printf("Retrieved Data is %v", result)
+	if err != nil {
+		return "", err
+	}
+
+	if len(result.Item) == 0 {
+		return "", nil
+	}
+
+	o := &struct {
+		Email string `dynamodbav:"email" json:"email"`
+		Hash  string `dynamodbav:"hash" json:"hash"`
+	}{}
+
+	attributevalue.UnmarshalMap(result.Item, o)
+	return o.Hash, nil
 }
