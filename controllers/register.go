@@ -26,7 +26,7 @@ func RegisterUser(c *gin.Context) {
 		Email:     registration.Email,
 	}
 
-	err := user.Register()
+	_, err := user.Register()
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"error": err.Error()})
 		return
