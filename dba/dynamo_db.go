@@ -2,7 +2,6 @@ package dba
 
 import (
 	"context"
-	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
@@ -48,7 +47,6 @@ func (c *DDBUserCredential) ReadDB() (string, error) {
 			"email": &types.AttributeValueMemberS{Value: c.email},
 		},
 	})
-	log.Printf("Retrieved Data is %v", result)
 	if err != nil {
 		return "", err
 	}

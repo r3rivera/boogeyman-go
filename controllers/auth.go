@@ -19,8 +19,20 @@ func LoginUserHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing Credentials"})
 		return
 	}
+	authUser(c, loginRequest.Email, loginRequest.Password)
+}
 
-	success, err := services.VerifyUserCredential(loginRequest.Email, loginRequest.Password)
+func LoginBasicAuthHandler(c *gin.Context) {
+	user, password, _ := c.Request.BasicAuth()
+	if user == "" || password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"Error": "Missing Credentials"})
+		return
+	}
+	authUser(c, user, password)
+}
+
+func authUser(c *gin.Context, email, password string) {
+	success, err := services.VerifyUserCredential(email, password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})
 		return
@@ -34,4 +46,5 @@ func LoginUserHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"Message": "Success"})
 		return
 	}
+
 }

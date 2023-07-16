@@ -25,6 +25,7 @@ func setupRouter() *gin.Engine {
 
 	publicWeb := r.Group("/web")
 	publicWeb.POST("/login", controllers.LoginUserHandler)
+	publicWeb.GET("/login2", controllers.LoginBasicAuthHandler)
 
 	return r
 }
