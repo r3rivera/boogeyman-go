@@ -1,5 +1,13 @@
 package services
 
 type UserRegistrar interface {
-	Register() (bool, error)
+	Register() error
+}
+
+func RegisterUser(user UserRegistrar) error {
+	err := user.Register()
+	if err != nil {
+		return err
+	}
+	return nil
 }

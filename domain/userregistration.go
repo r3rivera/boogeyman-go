@@ -15,9 +15,9 @@ type UserRegistration struct {
 	Email     string
 }
 
-func (u *UserRegistration) Register() (*dynamodb.PutItemOutput, error) {
+func (u *UserRegistration) Register() error {
 	ddbClient := adapters.GetDynamodbClient()
-	resp, err := ddbClient.PutItem(context.TODO(), &dynamodb.PutItemInput{
+	_, err := ddbClient.PutItem(context.TODO(), &dynamodb.PutItemInput{
 		TableName: aws.String("b_user_registration"),
 		Item: map[string]types.AttributeValue{
 			"email":    &types.AttributeValueMemberS{Value: u.Email},
@@ -32,7 +32,7 @@ func (u *UserRegistration) Register() (*dynamodb.PutItemOutput, error) {
 	})
 
 	if err != nil {
-		return &dynamodb.PutItemOutput{}, err
+		return err
 	}
-	return resp, nil
+	return nil
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/r3rivera/boogeyman/domain"
+	"github.com/r3rivera/boogeyman/services"
 )
 
 type UserReg struct {
@@ -13,7 +14,7 @@ type UserReg struct {
 	Email     string `json:"email" binding:"required"`
 }
 
-func RegisterUser(c *gin.Context) {
+func RegisterUserCtrl(c *gin.Context) {
 	var registration UserReg
 	if err := c.ShouldBindJSON(&registration); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad Request"})
@@ -26,7 +27,7 @@ func RegisterUser(c *gin.Context) {
 		Email:     registration.Email,
 	}
 
-	_, err := user.Register()
+	err := services.RegisterUser(&user)
 	if err != nil {
 		c.JSON(http.StatusExpectationFailed, gin.H{"error": err.Error()})
 		return
