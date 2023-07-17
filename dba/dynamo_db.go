@@ -63,3 +63,18 @@ func (c *DDBUserCredential) ReadDB() (string, error) {
 	attributevalue.UnmarshalMap(result.Item, o)
 	return o.Hash, nil
 }
+
+func (c *DDBUserCredential) DeleteDB() error {
+	ddbClient := getDynamodbClient()
+	_, err := ddbClient.DeleteItem(context.TODO(), &dynamodb.DeleteItemInput{
+		TableName: aws.String(USER_CREDENTIAL_TBL),
+		Key: map[string]types.AttributeValue{
+			"email": &types.AttributeValueMemberS{Value: c.email},
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
