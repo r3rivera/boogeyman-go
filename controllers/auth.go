@@ -41,8 +41,8 @@ func authUser(c *gin.Context, email, password string) {
 		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Invalid Credentials"})
 		return
 	}
-
 	if success {
+		//Get the default role and generate a token
 		c.JSON(http.StatusOK, gin.H{"Message": "Success"})
 		return
 	}

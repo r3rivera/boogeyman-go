@@ -14,12 +14,14 @@ import (
 type CertFile struct {
 	sub      string
 	fileName string
+	claims   map[string]string
 }
 
-func NewCertFile(sub, file string) *CertFile {
+func NewCertFile(sub, file string, claims map[string]string) *CertFile {
 	return &CertFile{
 		sub:      sub,
 		fileName: file,
+		claims:   claims,
 	}
 }
 
@@ -41,6 +43,11 @@ func (f *CertFile) GenerateJWT() (string, error) {
 		"iss": "r2-rivera.com",
 		"exp": time.Now().Add(time.Hour).Unix(),
 		"iat": time.Now().Unix(),
+	}
+	if f.claims != nil {
+		for k, v := range f.claims {
+			claims[k] = v
+		}
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
