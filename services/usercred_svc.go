@@ -25,7 +25,6 @@ func VerifyUserCredential(email, password string) (bool, error) {
 	output := dba.NewDDBUserCredential(email, password)
 
 	hashOut, err := output.ReadDB()
-	log.Printf("\n\n DB Value is %v \n\n", hashOut)
 	if err != nil {
 		log.Println(err.Error())
 		return false, err

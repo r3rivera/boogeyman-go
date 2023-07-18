@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/r3rivera/boogeyman/services"
+	"github.com/r3rivera/boogeyman/services/jwt"
 )
 
 type LoginRequest struct {
@@ -42,8 +43,24 @@ func authUser(c *gin.Context, email, password string) {
 		return
 	}
 	if success {
+		//Generate JWS token
+		claims := map[string]string{
+			"role": "user",
+			"app":  "app1",
+		}
+
+		path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/private_key.pem"
+		jwtCert := jwt.NewCertFile(email, path, claims)
+		jws, err := jwtCert.GenerateJWT()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})
+			return
+		}
 		//Get the default role and generate a token
-		c.JSON(http.StatusOK, gin.H{"Message": "Success"})
+		c.JSON(http.StatusOK, gin.H{
+			"Message": "Success",
+			"Token":   jws,
+		})
 		return
 	}
 

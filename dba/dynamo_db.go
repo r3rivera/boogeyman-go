@@ -24,6 +24,8 @@ func NewDDBUserCredential(email, hash string) DDBUserCredential {
 
 func (c *DDBUserCredential) WriteDB() error {
 	ddbClient := getDynamodbClient()
+
+	//Create the record in the credential table
 	_, err := ddbClient.PutItem(context.TODO(), &dynamodb.PutItemInput{
 		TableName: aws.String(USER_CREDENTIAL_TBL),
 		Item: map[string]types.AttributeValue{
