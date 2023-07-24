@@ -1,6 +1,7 @@
 package s3
 
 import (
+	"os"
 	"sync"
 	"time"
 
@@ -39,4 +40,26 @@ func GeneratePresignedUrl(fileKey, bucket string) (string, error) {
 		return "", err
 	}
 	return str, nil
+}
+
+func UploadFile(filePath, fileName, bucket string) error {
+	svc := getS3Client()
+
+	file, err := os.Open(filePath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	_, err = svc.PutObject(&s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(fileName),
+		Body:   file,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
