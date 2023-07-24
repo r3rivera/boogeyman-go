@@ -23,9 +23,13 @@ func setupRouter() *gin.Engine {
 	// Register User
 	publicApi.POST("/register", controllers.RegisterUserHandler)
 
+	// Login
 	publicWeb := r.Group("/web")
 	publicWeb.POST("/login", controllers.LoginUserHandler)
 	publicWeb.GET("/login2", controllers.LoginBasicAuthHandler)
+
+	//FileUpload
+	publicWeb.PUT("/upload", controllers.HandleFileUploader)
 
 	return r
 }

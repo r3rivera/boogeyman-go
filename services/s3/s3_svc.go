@@ -26,7 +26,6 @@ func getS3Client() *s3.S3 {
 		s3c = s3.New(s)
 	})
 	return s3c
-
 }
 
 func GeneratePresignedUrl(fileKey, bucket string) (string, error) {
@@ -42,18 +41,32 @@ func GeneratePresignedUrl(fileKey, bucket string) (string, error) {
 	return str, nil
 }
 
-func UploadFile(filePath, fileName, bucket string) error {
+type S3FileInfo struct {
+	filePath string
+	fileName string
+	bucket   string
+}
+
+func NewS3FileInfo(filePath, fileName, bucket string) *S3FileInfo {
+	return &S3FileInfo{
+		filePath: filePath,
+		fileName: fileName,
+		bucket:   bucket,
+	}
+}
+
+func (f *S3FileInfo) UploadFile() error {
 	svc := getS3Client()
 
-	file, err := os.Open(filePath)
+	file, err := os.Open(f.filePath + f.fileName)
 	if err != nil {
 		return err
 	}
 	defer file.Close()
 
 	_, err = svc.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(bucket),
-		Key:    aws.String(fileName),
+		Bucket: aws.String(f.bucket),
+		Key:    aws.String(f.filePath + f.fileName),
 		Body:   file,
 	})
 

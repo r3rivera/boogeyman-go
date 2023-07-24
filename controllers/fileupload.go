@@ -5,7 +5,10 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/r3rivera/boogeyman/services/s3"
 )
+
+const BUCKET_NAME = "amdg-r2app"
 
 type FileMetaData struct {
 	Description string `form:"description"`
@@ -33,5 +36,13 @@ func HandleFileUploader(c *gin.Context) {
 		return
 	}
 	defer os.Remove(filePath)
+
+	s3Info := s3.NewS3FileInfo(filePath, file.Filename, BUCKET_NAME)
+	err = s3Info.UploadFile()
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Error processing the file"})
+		return
+	}
 
 }

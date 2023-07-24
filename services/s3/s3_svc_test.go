@@ -12,3 +12,13 @@ func Test_S3PresignedUrl(t *testing.T) {
 	}
 	t.Logf("URL :: \n\n%s \n\n", url)
 }
+
+func Test_S3PutObject(t *testing.T) {
+
+	s := NewS3FileInfo("files/", "test001.txt", BUCKET_NAME)
+	err := s.UploadFile()
+	if err != nil {
+		t.Logf(err.Error())
+		t.Fail()
+	}
+}
