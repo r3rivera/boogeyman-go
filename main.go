@@ -31,6 +31,9 @@ func setupRouter() *gin.Engine {
 	//FileUpload
 	publicWeb.PUT("/upload", controllers.HandleFileUploader)
 
+	privateApi := publicApi.Group("/secured")
+	privateApi.POST("/verify", controllers.VerifyJws)
+
 	return r
 }
 

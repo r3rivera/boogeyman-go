@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -17,6 +16,15 @@ type CertFile struct {
 	claims   map[string]string
 }
 
+type JWSToken struct {
+	token    string
+	fileName string
+}
+
+type Claim struct {
+	jwt.MapClaims
+}
+
 func NewCertFile(sub, file string, claims map[string]string) *CertFile {
 	return &CertFile{
 		sub:      sub,
@@ -25,8 +33,14 @@ func NewCertFile(sub, file string, claims map[string]string) *CertFile {
 	}
 }
 
-func (f *CertFile) GenerateJWT() (string, error) {
-	log.Printf("PATH is %s", f.fileName)
+func NewTokenVerifier(token, pathName string) *JWSToken {
+	return &JWSToken{
+		token:    token,
+		fileName: pathName,
+	}
+}
+
+func (f *CertFile) GenerateJWS() (string, error) {
 	cBytes, err := ioutil.ReadFile(f.fileName)
 	if err != nil {
 		return "", errors.New("Unable to read file!")
@@ -44,6 +58,7 @@ func (f *CertFile) GenerateJWT() (string, error) {
 		"exp": time.Now().Add(time.Hour).Unix(),
 		"iat": time.Now().Unix(),
 	}
+
 	if f.claims != nil {
 		for k, v := range f.claims {
 			claims[k] = v
@@ -57,4 +72,32 @@ func (f *CertFile) GenerateJWT() (string, error) {
 		return "", errors.New(msg)
 	}
 	return jws, nil
+}
+
+func (t *JWSToken) VerifyJWS() error {
+
+	pBytes, err := ioutil.ReadFile(t.fileName)
+	if err != nil {
+		return errors.New("Unable to read file!")
+	}
+
+	pub, err := jwt.ParseRSAPublicKeyFromPEM(pBytes)
+	if err != nil {
+		return err
+	}
+
+	claim := &Claim{}
+	token, err := jwt.ParseWithClaims(t.token, claim, func(token *jwt.Token) (interface{}, error) {
+		return pub, nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return errors.New("Invalid Token Signature")
+		}
+		return err
+	}
+	if !token.Valid {
+		return errors.New("Token Not Valid")
+	}
+	return nil
 }

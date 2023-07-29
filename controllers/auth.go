@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/r3rivera/boogeyman/services"
@@ -49,9 +50,9 @@ func authUser(c *gin.Context, email, password string) {
 			"app":  "app1",
 		}
 
-		path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/private_key.pem"
+		path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem"
 		jwtCert := jwt.NewCertFile(email, path, claims)
-		jws, err := jwtCert.GenerateJWT()
+		jws, err := jwtCert.GenerateJWS()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})
 			return
@@ -63,5 +64,26 @@ func authUser(c *gin.Context, email, password string) {
 		})
 		return
 	}
+}
+
+func VerifyJws(c *gin.Context) {
+	token := c.Request.Header.Get("Authorization")
+
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Not Authorized"})
+		return
+	}
+	splitToken := strings.Split(token, "Bearer ")
+	path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/public1_key.pem"
+	verifier := jwt.NewTokenVerifier(splitToken[1], path)
+	err := verifier.VerifyJWS()
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Token Not Authorized"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"Message": "Success",
+	})
 
 }

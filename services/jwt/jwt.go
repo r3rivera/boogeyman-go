@@ -1,5 +1,9 @@
 package jwt
 
 type Signer interface {
-	GenerateJWT() (string, error)
+	GenerateJWS() (string, error)
+}
+
+type Verifier interface {
+	VerifyJWS() error
 }
