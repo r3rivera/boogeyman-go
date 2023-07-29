@@ -3,7 +3,7 @@ package jwt
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -41,7 +41,7 @@ func NewTokenVerifier(token, pathName string) *JWSToken {
 }
 
 func (f *CertFile) GenerateJWS() (string, error) {
-	cBytes, err := ioutil.ReadFile(f.fileName)
+	cBytes, err := os.ReadFile(f.fileName)
 	if err != nil {
 		return "", errors.New("Unable to read file!")
 	}
@@ -76,7 +76,7 @@ func (f *CertFile) GenerateJWS() (string, error) {
 
 func (t *JWSToken) VerifyJWS() error {
 
-	pBytes, err := ioutil.ReadFile(t.fileName)
+	pBytes, err := os.ReadFile(t.fileName)
 	if err != nil {
 		return errors.New("Unable to read file!")
 	}
