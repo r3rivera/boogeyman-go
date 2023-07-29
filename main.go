@@ -2,7 +2,9 @@ package main
 
 import (
 	"net/http"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/r3rivera/boogeyman/controllers"
 )
@@ -13,6 +15,19 @@ func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
+
+	// Configure CORS
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "http://localhost:*"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	publicApi := r.Group("/api")
 	// Health test
@@ -26,7 +41,7 @@ func setupRouter() *gin.Engine {
 	// Login
 	publicWeb := r.Group("/web")
 	publicWeb.POST("/login", controllers.LoginUserHandler)
-	publicWeb.GET("/login2", controllers.LoginBasicAuthHandler)
+	publicWeb.POST("/login2", controllers.LoginBasicAuthHandler)
 
 	//FileUpload
 	publicWeb.PUT("/upload", controllers.HandleFileUploader)
