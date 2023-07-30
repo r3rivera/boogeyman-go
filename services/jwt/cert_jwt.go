@@ -21,10 +21,6 @@ type JWSToken struct {
 	fileName string
 }
 
-type Claim struct {
-	jwt.MapClaims
-}
-
 func NewCertFile(sub, file string, claims map[string]string) *CertFile {
 	return &CertFile{
 		sub:      sub,
@@ -86,8 +82,7 @@ func (t *JWSToken) VerifyJWS() error {
 		return err
 	}
 
-	claim := &Claim{}
-	token, err := jwt.ParseWithClaims(t.token, claim, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(t.token, func(token *jwt.Token) (interface{}, error) {
 		return pub, nil
 	})
 	if err != nil {
