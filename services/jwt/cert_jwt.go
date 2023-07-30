@@ -53,7 +53,7 @@ func (f *CertFile) GenerateJWS() (string, error) {
 	claims := jwt.MapClaims{
 		"sub": f.sub,
 		"iss": f.iss,
-		"exp": time.Now().Add(time.Hour).Unix(),
+		"exp": time.Now().Add(time.Duration(30) * time.Minute).Unix(),
 		"iat": time.Now().Unix(),
 	}
 
@@ -127,4 +127,14 @@ func (t *JWSToken) ExtractClaims() (jwt.MapClaims, error) {
 		return nil, errors.New("Token Not Valid")
 	}
 
+}
+
+func ValidateClaims(iss string, claim ClaimExtractor) bool {
+	aClaims, err := claim.ExtractClaims()
+	if err != nil {
+		return false
+	}
+	isValidIss := aClaims.VerifyIssuer(iss, true)
+	isNotExpire := aClaims.VerifyExpiresAt(time.Now().Unix(), true)
+	return isValidIss && isNotExpire
 }
