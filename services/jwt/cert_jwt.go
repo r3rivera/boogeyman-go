@@ -98,3 +98,33 @@ func (t *JWSToken) VerifyJWS() error {
 	}
 	return nil
 }
+
+func (t *JWSToken) ExtractClaims() (jwt.MapClaims, error) {
+
+	pBytes, err := os.ReadFile(t.fileName)
+	if err != nil {
+		return nil, errors.New("Unable to read file!")
+	}
+
+	pub, err := jwt.ParseRSAPublicKeyFromPEM(pBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := jwt.Parse(t.token, func(token *jwt.Token) (interface{}, error) {
+		return pub, nil
+	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return nil, errors.New("Invalid Token Signature")
+		}
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	} else {
+		return nil, errors.New("Token Not Valid")
+	}
+
+}
