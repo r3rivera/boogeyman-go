@@ -26,4 +26,6 @@ echo "Start compiling the GO Application"
 GO_FILE="$(find ./boogeyman | head -n 1)"
 go build .
 echo "Compilation Complete :: JAR File is ${GO_FILE}"
+
+ls -lrta boogeyman
 echo "############## END   ::: BUILD INFORMATION ##############"
