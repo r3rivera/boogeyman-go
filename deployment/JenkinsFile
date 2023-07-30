@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+    stages {
+        stage('Go Build') {
+            steps{
+                echo "Building R3APP"
+                echo "CURRENT WORKSPACE       ::: ${WORKSPACE}"
+
+                sh "chmod +x ./deployment/build-go.sh"
+                sh "./deployment/build-go.sh"
+            }
+        }
+        stage('Go Local Docker Deploy') {
+            steps{
+                script{
+                    input(id: "confirm", message: "Proceed to deploy in local docker?", ok: "Proceed")
+                }
+                //sh "chmod +x ./deployment/buildapp/docker-local-deploy.sh"
+                //sh "./deployment/buildapp/docker-local-deploy.sh"
+
+            }
+        }
+        stage('Go ECS Deploy') {
+            steps{
+                script{
+                    input(id: "confirm", message: "Proceed to deploy in ECS?", ok: "Proceed")
+                }
+                echo 'Deploying Production Go'
+            }
+        }
+
+    }
+}
