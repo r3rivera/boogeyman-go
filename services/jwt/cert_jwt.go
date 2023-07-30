@@ -12,6 +12,7 @@ import (
 
 type CertFile struct {
 	sub      string
+	iss      string
 	fileName string
 	claims   map[string]string
 }
@@ -21,9 +22,10 @@ type JWSToken struct {
 	fileName string
 }
 
-func NewCertFile(sub, file string, claims map[string]string) *CertFile {
+func NewCertFile(sub, issuer, file string, claims map[string]string) *CertFile {
 	return &CertFile{
 		sub:      sub,
+		iss:      issuer,
 		fileName: file,
 		claims:   claims,
 	}
@@ -50,7 +52,7 @@ func (f *CertFile) GenerateJWS() (string, error) {
 
 	claims := jwt.MapClaims{
 		"sub": f.sub,
-		"iss": "r2-rivera.com",
+		"iss": f.iss,
 		"exp": time.Now().Add(time.Hour).Unix(),
 		"iat": time.Now().Unix(),
 	}

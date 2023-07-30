@@ -51,7 +51,7 @@ func authUser(c *gin.Context, email, password string) {
 		}
 
 		path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem"
-		jwtCert := jwt.NewCertFile(email, path, claims)
+		jwtCert := jwt.NewCertFile(email, "", path, claims)
 		jws, err := jwtCert.GenerateJWS()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})

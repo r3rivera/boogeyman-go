@@ -11,6 +11,7 @@ func Test_SignJwt(t *testing.T) {
 
 	cert := NewCertFile(
 		"test@test.com",
+		"localhost.com",
 		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
 		custom)
 	jws, err := cert.GenerateJWS()
@@ -26,6 +27,7 @@ func Test_VerifyJws(t *testing.T) {
 
 	cert := NewCertFile(
 		"test@test.com",
+		"localhost.com",
 		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
 		nil)
 	jws, err := cert.GenerateJWS()
