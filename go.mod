@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/aws/aws-sdk-go-v2/config v1.18.28
+	github.com/gin-contrib/cors v1.4.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 )
 
@@ -11,7 +12,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/dynamodbstreams v1.14.15 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.9.11 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.7.29 // indirect
-	github.com/gin-contrib/cors v1.4.0 // indirect
 )
 
 require (
