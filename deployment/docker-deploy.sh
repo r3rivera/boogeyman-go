@@ -8,6 +8,10 @@ echo "Current Directory is $(pwd)"
 echo "Current User is $USER"
 echo ""
 echo "Stopping an existing docker container..."
+
+DOCKER_TAG="boogeyman-go"
+
+
 DOCKER_CTR_STOP="$(docker container stop ${DOCKER_TAG} | cut -d ':' -f 2)"
 echo "Stop Status :: ${DOCKER_CTR_STOP}"
 
