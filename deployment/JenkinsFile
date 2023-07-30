@@ -17,8 +17,8 @@ pipeline {
                 script{
                     input(id: "confirm", message: "Proceed to deploy in local docker?", ok: "Proceed")
                 }
-                //sh "chmod +x ./deployment/buildapp/docker-local-deploy.sh"
-                //sh "./deployment/buildapp/docker-local-deploy.sh"
+                sh "chmod +x ./deployment/docker-deploy.sh"
+                sh "./deployment/docker-deploy.sh"
 
             }
         }
