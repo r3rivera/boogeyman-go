@@ -9,6 +9,8 @@ WORKDIR /app
 COPY go.mod go.sum ./
 
 RUN go mod download 
+RUN openssl genpkey -algorithm RSA -out /var/local/private1_key.pem -pkeyopt rsa_keygen_bits:2048
+RUN openssl rsa -pubout -in /var/local/private1_key.pem -out /var/local/public1_key.pem
 
 COPY . .
 

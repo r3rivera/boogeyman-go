@@ -2,6 +2,8 @@ package dba
 
 import (
 	"context"
+	"log"
+	"os"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -20,10 +22,12 @@ func getAwsConfig() aws.Config {
 
 	onceAwsConfig.Do(func() {
 		var err error
+		log.Println(os.Environ())
 		awsConfig, err = config.LoadDefaultConfig(context.TODO())
 		if err != nil {
 			panic(err)
 		}
+
 	})
 	return awsConfig
 }
