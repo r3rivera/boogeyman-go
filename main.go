@@ -31,7 +31,7 @@ func setupRouter() *gin.Engine {
 
 	publicApi := r.Group("/api")
 	// Health test
-	publicApi.GET("/health", func(c *gin.Context) {
+	publicApi.GET("/healthcheck", func(c *gin.Context) {
 		c.String(http.StatusOK, "Running")
 	})
 

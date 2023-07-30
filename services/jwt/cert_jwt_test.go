@@ -15,7 +15,7 @@ func Test_SignJwt(t *testing.T) {
 	cert := NewCertFile(
 		"test@test.com",
 		"localhost.com",
-		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
+		"/var/local/private1_key.pem",
 		custom)
 	jws, err := cert.GenerateJWS()
 	if err != nil {
@@ -31,7 +31,7 @@ func Test_VerifyJws(t *testing.T) {
 	cert := NewCertFile(
 		"test@test.com",
 		"localhost.com",
-		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
+		"/var/local/private1_key.pem",
 		nil)
 	jws, err := cert.GenerateJWS()
 	if err != nil {
@@ -39,7 +39,7 @@ func Test_VerifyJws(t *testing.T) {
 		t.Fail()
 	}
 
-	pubKey := "/Users/r2devops/Devops/projects/golang/boogeyman-go/public1_key.pem"
+	pubKey := "/var/local/public1_key.pem"
 	verifier := NewTokenVerifier(jws, pubKey)
 
 	err = verifier.VerifyJWS()
@@ -60,7 +60,7 @@ func Test_ExtractClaim(t *testing.T) {
 	cert := NewCertFile(
 		"test@test.com",
 		"localhost.com",
-		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
+		"/var/local/private1_key.pem",
 		customClaims)
 	jws, err := cert.GenerateJWS()
 	if err != nil {
@@ -68,7 +68,7 @@ func Test_ExtractClaim(t *testing.T) {
 		t.Fail()
 	}
 
-	pubKey := "/Users/r2devops/Devops/projects/golang/boogeyman-go/public1_key.pem"
+	pubKey := "/var/local/public1_key.pem"
 	verifier := NewTokenVerifier(jws, pubKey)
 
 	claim, err := verifier.ExtractClaims()
@@ -94,7 +94,7 @@ func Test_ValidateClaim(t *testing.T) {
 	cert := NewCertFile(
 		"test@test.com",
 		ISS,
-		"/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem",
+		"/var/local/private1_key.pem",
 		customClaims)
 	jws, err := cert.GenerateJWS()
 	if err != nil {
@@ -102,7 +102,7 @@ func Test_ValidateClaim(t *testing.T) {
 		t.Fail()
 	}
 
-	pubKey := "/Users/r2devops/Devops/projects/golang/boogeyman-go/public1_key.pem"
+	pubKey := "/var/local/public1_key.pem"
 	verifier := NewTokenVerifier(jws, pubKey)
 
 	time.Sleep(time.Duration(5) * time.Second)

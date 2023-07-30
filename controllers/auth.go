@@ -50,7 +50,7 @@ func authUser(c *gin.Context, email, password string) {
 			"app":  "app1",
 		}
 
-		path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/private1_key.pem"
+		path := "/var/local/private1_key.pem"
 		jwtCert := jwt.NewCertFile(email, "", path, claims)
 		jws, err := jwtCert.GenerateJWS()
 		if err != nil {
@@ -74,7 +74,7 @@ func VerifyJws(c *gin.Context) {
 		return
 	}
 	splitToken := strings.Split(token, "Bearer ")
-	path := "/Users/r2devops/Devops/projects/golang/boogeyman-go/public1_key.pem"
+	path := "/var/local/public1_key.pem"
 	verifier := jwt.NewTokenVerifier(splitToken[1], path)
 	err := verifier.VerifyJWS()
 
