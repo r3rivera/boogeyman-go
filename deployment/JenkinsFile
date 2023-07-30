@@ -1,13 +1,15 @@
 pipeline {
     agent any
     stages {
-        stage('Go Build') {
+        stage('Go Docker Image Build') {
             steps{
                 echo "Building R3APP"
                 echo "CURRENT WORKSPACE       ::: ${WORKSPACE}"
 
-                sh "chmod +x ./deployment/build-go.sh"
-                sh "./deployment/build-go.sh"
+                //sh "chmod +x ./deployment/build-go.sh"
+                //sh "./deployment/build-go.sh"
+                sh "chmod +x ./deployment/docker-build.sh"
+                sh "./deployment/docker-build.sh"
             }
         }
         stage('Go Local Docker Deploy') {
