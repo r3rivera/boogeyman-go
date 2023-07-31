@@ -1,7 +1,6 @@
 package main
 
 import (
-	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -18,7 +17,7 @@ func setupRouter() *gin.Engine {
 
 	// Configure CORS
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"PUT", "PATCH", "POST", "GET", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -31,9 +30,7 @@ func setupRouter() *gin.Engine {
 
 	publicApi := r.Group("/api")
 	// Health test
-	publicApi.GET("/healthcheck", func(c *gin.Context) {
-		c.String(http.StatusOK, "Running")
-	})
+	publicApi.GET("/healthcheck", controllers.HealthcheckHandler)
 
 	// Register User
 	publicApi.POST("/register", controllers.RegisterUserHandler)
