@@ -20,7 +20,6 @@ AWS_SECRET_ACCESS_KEY=$(aws --profile default configure get aws_secret_access_ke
 
 DOCKER_UUID="$(docker container run  \
     -p 8082:8082 \
-    -v $HOME/.aws/credentials:/root/.aws/credentials:ro \
     -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
     -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
     -d --name ${DOCKER_TAG} ${DOCKER_TAG})"
