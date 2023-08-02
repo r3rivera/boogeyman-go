@@ -14,10 +14,10 @@ DOCKER_TAG="boogeyman-go"
 echo "Start deploying docker image"
 echo ""
 echo "Deploying a new docker container...."
-echo "AWS $(aws --profile default configure get aws_access_key_id)"
-echo "AWS $(aws configure get aws_access_key_id)"
-AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
-AWS_SECRET_ACCESS_KEY=$(aws onfigure get aws_secret_access_key)
+echo "$(cat /opt/aws/aws.txt | head -n 1)"
+echo "$(cat /opt/aws/aws_key.txt | head -n 1)"
+AWS_ACCESS_KEY_ID=$(cat /opt/aws/aws.txt | head -n 1)
+AWS_SECRET_ACCESS_KEY=$(cat /opt/aws/aws_key.txt | head -n 1)
 
 DOCKER_UUID="$(docker container run  \
     -p 8082:8082 \
