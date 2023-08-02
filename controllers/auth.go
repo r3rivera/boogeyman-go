@@ -36,7 +36,7 @@ func LoginBasicAuthHandler(c *gin.Context) {
 func authUser(c *gin.Context, email, password string) {
 	success, err := services.VerifyUserCredential(email, password)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Unable To Validate"})
 		return
 	}
 	if !success {
