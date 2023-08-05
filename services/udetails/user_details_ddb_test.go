@@ -1,6 +1,7 @@
 package udetails
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -13,21 +14,34 @@ func Test_GetCredenti(t *testing.T) {
 		t.Fail()
 	}
 	info := UserDetail{
-		firstname: "Junit",
-		lastname:  "Tester",
-		dob:       dob,
+		Firstname: "Junit",
+		Lastname:  "Tester",
+		Dob:       dob,
 	}
 
 	address := UserAddress{
-		street1: "123 Main Street",
-		street2: "Suite 30",
-		city:    "San Antonio",
-		state:   "TX",
-		zip:     "78238",
+		Street1: "123 Main Street",
+		Street2: "Suite 30",
+		City:    "San Antonio",
+		State:   "TX",
+		Zip:     "78238",
 	}
 
 	creds := NewUserDetail("junit@test.com", info, address)
 	err = creds.WriteDB()
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+
+	user, err := creds.ReadDB()
+	if err != nil {
+		t.Log(err.Error())
+		t.Fail()
+	}
+	fmt.Printf("Response is %v", user)
+
+	err = creds.DeleteDB()
 	if err != nil {
 		t.Log(err.Error())
 		t.Fail()
