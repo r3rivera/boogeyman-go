@@ -5,8 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"github.com/r3rivera/boogeyman/services"
-	"github.com/r3rivera/boogeyman/services/jwt"
+	"github.com/r3rivera/boogeyman/services/jwtoken"
 )
 
 type LoginRequest struct {
@@ -51,7 +52,7 @@ func authUser(c *gin.Context, email, password string) {
 		}
 
 		path := "/var/local/private1_key.pem"
-		jwtCert := jwt.NewCertFile(email, "", path, claims)
+		jwtCert := jwtoken.NewCertFile(email, "", path, claims)
 		jws, err := jwtCert.GenerateJWS()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"Error": "System Error"})
@@ -86,11 +87,27 @@ func VerifyJwsToken(c *gin.Context) bool {
 	}
 	splitToken := strings.Split(token, "Bearer ")
 	path := "/var/local/public1_key.pem"
-	verifier := jwt.NewTokenVerifier(splitToken[1], path)
+	verifier := jwtoken.NewTokenVerifier(splitToken[1], path)
 	err := verifier.VerifyJWS()
 
 	if err != nil {
 		return false
 	}
 	return true
+}
+
+func ExtractClaims(c *gin.Context) jwt.MapClaims {
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Not Authorized"})
+		return jwt.MapClaims{}
+	}
+	splitToken := strings.Split(token, "Bearer ")
+	path := "/var/local/public1_key.pem"
+	verifier := jwtoken.NewTokenVerifier(splitToken[1], path)
+	claims, err := verifier.ExtractClaims()
+	if err != nil {
+		return jwt.MapClaims{}
+	}
+	return claims
 }
