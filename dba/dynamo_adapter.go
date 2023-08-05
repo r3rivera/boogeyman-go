@@ -29,7 +29,7 @@ func getAwsConfig() aws.Config {
 	return awsConfig
 }
 
-func getDynamodbClient() *dynamodb.Client {
+func GetDynamodbClient() *dynamodb.Client {
 	onceDdbClient.Do(func() {
 		awsConfig = getAwsConfig()
 		dynamodbClient = dynamodb.NewFromConfig(awsConfig, func(opt *dynamodb.Options) {

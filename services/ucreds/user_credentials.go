@@ -1,4 +1,4 @@
-package dba
+package ucreds
 
 import (
 	"context"
@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
+	"github.com/r3rivera/boogeyman/dba"
 )
 
 const USER_CREDENTIAL_TBL = "b_user_credential"
@@ -16,14 +17,14 @@ type DDBUserCredential struct {
 	hash  string
 }
 
-func NewDDBUserCredential(email, hash string) DDBUserCredential {
-	return DDBUserCredential{
+func NewDDBUserCredential(email, hash string) *DDBUserCredential {
+	return &DDBUserCredential{
 		email, hash,
 	}
 }
 
 func (c *DDBUserCredential) WriteDB() error {
-	ddbClient := getDynamodbClient()
+	ddbClient := dba.GetDynamodbClient()
 
 	//Create the record in the credential table
 	_, err := ddbClient.PutItem(context.TODO(), &dynamodb.PutItemInput{
@@ -41,7 +42,7 @@ func (c *DDBUserCredential) WriteDB() error {
 }
 
 func (c *DDBUserCredential) ReadDB() (string, error) {
-	ddbClient := getDynamodbClient()
+	ddbClient := dba.GetDynamodbClient()
 
 	result, err := ddbClient.GetItem(context.TODO(), &dynamodb.GetItemInput{
 		TableName: aws.String(USER_CREDENTIAL_TBL),
@@ -67,7 +68,7 @@ func (c *DDBUserCredential) ReadDB() (string, error) {
 }
 
 func (c *DDBUserCredential) DeleteDB() error {
-	ddbClient := getDynamodbClient()
+	ddbClient := dba.GetDynamodbClient()
 	_, err := ddbClient.DeleteItem(context.TODO(), &dynamodb.DeleteItemInput{
 		TableName: aws.String(USER_CREDENTIAL_TBL),
 		Key: map[string]types.AttributeValue{

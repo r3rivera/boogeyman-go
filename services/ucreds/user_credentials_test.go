@@ -1,4 +1,4 @@
-package dba
+package ucreds
 
 import "testing"
 
