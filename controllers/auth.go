@@ -67,18 +67,8 @@ func authUser(c *gin.Context, email, password string) {
 }
 
 func VerifyJws(c *gin.Context) {
-	token := c.Request.Header.Get("Authorization")
-
-	if token == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Not Authorized"})
-		return
-	}
-	splitToken := strings.Split(token, "Bearer ")
-	path := "/var/local/public1_key.pem"
-	verifier := jwt.NewTokenVerifier(splitToken[1], path)
-	err := verifier.VerifyJWS()
-
-	if err != nil {
+	isValid := VerifyJwsToken(c)
+	if !isValid {
 		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Token Not Authorized"})
 		return
 	}
@@ -86,4 +76,21 @@ func VerifyJws(c *gin.Context) {
 		"Message": "Success",
 	})
 
+}
+
+func VerifyJwsToken(c *gin.Context) bool {
+	token := c.Request.Header.Get("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Not Authorized"})
+		return false
+	}
+	splitToken := strings.Split(token, "Bearer ")
+	path := "/var/local/public1_key.pem"
+	verifier := jwt.NewTokenVerifier(splitToken[1], path)
+	err := verifier.VerifyJWS()
+
+	if err != nil {
+		return false
+	}
+	return true
 }
