@@ -45,6 +45,8 @@ func setupRouter() *gin.Engine {
 
 	privateApi := publicApi.Group("/secured")
 	privateApi.POST("/verify", controllers.VerifyJws)
+	privateApi.POST("/profile", controllers.CreateUserProfile)
+	privateApi.GET("/profile", controllers.GetUserDetails)
 
 	return r
 }

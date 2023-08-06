@@ -96,7 +96,7 @@ func VerifyJwsToken(c *gin.Context) bool {
 	return true
 }
 
-func ExtractClaims(c *gin.Context) jwt.MapClaims {
+func ExtractClaims(c *gin.Context) map[string]interface{} {
 	token := c.Request.Header.Get("Authorization")
 	if token == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"Error": "Not Authorized"})
